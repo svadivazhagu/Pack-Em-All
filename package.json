@@ -7,6 +7,7 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "d3": "^3.7.0",
     "formidable": "^1.2.1",
     "merge-descriptors": "^1.0.1",
     "mongodb": "^3.1.6",

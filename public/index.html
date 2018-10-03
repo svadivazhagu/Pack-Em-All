@@ -1,85 +1,104 @@
 <html lang="en">
   <head>
-    <title>Pokébase</title>
+    <title>Career Search</title>
     <meta charset="UTF-8">
-     <meta name="description" content="Pokemon Showdown Team Database">
+     <meta name="description" content="Career Search WebApp for HighSchool Students">
      <meta name="author" content="Daniel McDonough">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <!-- Bootstrap CSS CDN -->
-     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
-     <!-- Our Custom CSS -->
+
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"><!-- Our Custom CSS -->
      <link rel="stylesheet" href="css/style.css">
 
-     <!-- Font Awesome JS -->
-     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
-     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
-
   </head>
-
 
   <body>
       <div class="wrapper">
           <!-- Sidebar  -->
           <nav id="sidebar">
+            <!--Side bar Header -->
               <div class="sidebar-header">
-                  <h3>Bootstrap Sidebar</h3>
+                  <h3>Career Search</h3>
               </div>
-
-              <ul class="list-unstyled components">
-                  <p>Dummy Heading</p>
-                  <li class="active">
-                      <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a>
-                      <ul class="collapse list-unstyled" id="homeSubmenu">
-                          <li>
-                              <a href="#">Home 1</a>
-                          </li>
-                          <li>
-                              <a href="#">Home 2</a>
-                          </li>
-                          <li>
-                              <a href="#">Home 3</a>
-                          </li>
-                      </ul>
-                  </li>
-                  <li>
-                      <a href="#">About</a>
-                  </li>
-                  <li>
-                      <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pages</a>
-                      <ul class="collapse list-unstyled" id="pageSubmenu">
-                          <li>
-                              <a href="#">Page 1</a>
-                          </li>
-                          <li>
-                              <a href="#">Page 2</a>
-                          </li>
-                          <li>
-                              <a href="#">Page 3</a>
-                          </li>
-                      </ul>
-                  </li>
-                  <li>
-                      <a href="#">Portfolio</a>
-                  </li>
-                  <li>
-                      <a href="#">Contact</a>
-                  </li>
+              <div class="container">
+              <!--Side bar Navigation Tabs-->
+              <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link active" data-toggle="tab" href="#search">Search</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" data-toggle="tab" href="#upload">Upload</a>
+                </li>
               </ul>
+              <div class="tab-content">
+                <div id="search" class=" tab-pane active"><br>
+                  <form class="text-center p-3" >
+                    <p class="h4 mb-4">Search Jobs</p>
+                      <input type="text" id="search_catagory" class="form-control mb-4" placeholder="Search Jobs...">
+
+                    <!-- Subject -->
+
+                    <!-- Send button -->
+                    <button method="post" class="btn btn-primary btn-block" type="button" onclick="search()">Search</button>
+
+                    <br/><br/>
+
+                  </form>
+                  </div>
+                <div id="upload" class="container tab-pane fade"><br>
+                  <form action="filetoupload" method="post" enctype="multipart/form-data" class="text-center p-3">
+                        <p class="h4 mb-4">Add Jobs</p>
+                    <!-- Name -->
+                    <input type="text" id="input_jobname" class="form-control mb-4" placeholder="Job Name...">
+
+                    <input type="text" id="input_parent" class="form-control mb-4" placeholder="Classification...">
+                    <input type="text" id="input_data" class="form-control mb-4" placeholder="Data...">
+
+                    <!-- Subject -->
+                        <button type="button" class="btn btn-primary btn-block"  onclick="upload()">Upload</button>
+                        <p id="errormsg" class="hidden errormsg">Please make sure your link is correct and no field is empty</p>
+                  </form>
+
+
+                  </div>
+                </div>
+
+
+                <footer class="bg-dark text-white mt-4">
+
+                </footer>
+
 
               <ul class="list-unstyled CTAs">
-                  <li>
-                      <a href="https://bootstrapious.com/tutorial/files/sidebar.zip" class="download">Download source</a>
-                  </li>
-                  <li>
-                      <a href="https://bootstrapious.com/p/bootstrap-sidebar" class="article">Back to article</a>
-                  </li>
+                  <form action="update" method="post" enctype="multipart/form-data" class="text-center p-3">
+                    <div class="row">
+
+                            <p class="h4 mb-4">Job Data</p>
+                        <!-- Name -->
+                        <input type="text" id="input_jobname_u" class="form-control mb-4" placeholder="Job Name...">
+
+                        <input type="text" id="input_parent_u" class="form-control mb-4" placeholder="Classification...">
+
+                        <input type="text" id="input_data_u" class="form-control mb-4" placeholder="Data...">
+
+                        <!-- Subject -->
+
+                            <p id="errormsg" class="hidden errormsg">Please make sure your link is correct and no field is empty</p>
+                            </div>
+                        <div class="row">
+                          <button type="button" class="btn btn-secondary btn-block"  onclick="update()">Update</button>
+                          <button type="button" class="btn btn-danger btn-block"  onclick="delete()">Delete</button>
+                        </div>
+                      </form>
+
               </ul>
+            </div>
           </nav>
 
           <!-- Page Content  -->
           <div id="content">
 
-              <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
                   <div class="container-fluid">
 
                       <button type="button" id="sidebarCollapse" class="btn btn-info">
@@ -87,18 +106,187 @@
                           <span>Toggle Sidebar</span>
                       </button>
                   </div>
-              </nav>
 
-              <h2>D3 stuff does here...</h2>
+
+
+
+                  <svg width="960" height="960"></svg>
+                  <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+                    <script>
+
+                    var xml = new XMLHttpRequest();
+                    xml.open("GET", "/flare.json");
+                    xml.onreadystatechange = handle_res;
+                    xml.send();
+
+
+
+
+                    //handle search response
+                      function handle_res() {
+                        switch(this.readyState){
+                          case 1:
+                              console.log("Opened Query MSG");
+                              break;
+                          case 2:
+                              console.log("Reading Query HEADER");
+                              break;
+                          case 3:
+                              console.log("Loading Query Data");
+                              break;
+                          case 4:
+                          if (this.status == 200) {
+                            var myArr = JSON.parse(this.responseText);
+                              //console.log("From the front end:\n");
+                              console.log(myArr);
+                              rundata(myArr);
+                              //return myArr;
+                            }
+                            else if(this.status == 404){
+                              console.log("Error 404");
+                            }
+                            else{
+                              console.log('Error 503');
+                            }
+                            break;
+                          default:
+                            console.log("Something Went wrong...");
+                            break;
+                          }
+                        }
+
+
+
+
+                        function rundata(root){
+
+                          var color = d3.scaleLinear()
+                                .domain([-1, 5])
+                                .range(["#8BBCFC", "hsl(228,30%,40%)"])
+                                .interpolate(d3.interpolateHcl);
+
+                            var body = d3.select("body").style("background-color", color(-1));
+                            var diameter;
+                            var g;
+
+                            var svg = d3.select("svg");
+                            var margin = 50;
+                            if($(window).width()<=700){
+                               diameter =+ $(window).width()
+                               g = svg.append("g").attr("transform", "translate(" + diameter/2  + "," + diameter/2 + ")");
+                            }
+                            else{
+                              diameter =+ ($(window).width()/2)- margin
+                              g = svg.append("g").attr("transform", "translate(" + diameter  + "," + diameter/2 + ")");
+                            }
+
+                            var pack = d3.pack()
+                                .size([diameter - margin, diameter - margin])
+                                .padding(2);
+                            var tooltip = d3.select("body")
+                            	.append("div")
+                            	.style("position", "absolute")
+                            	.style("z-index", "10")
+                            	.style("visibility", "hidden")
+
+                              function getSize() {
+                                       var d3text = d3.select(this);
+                                       var circ = d3.select(this.previousElementSibling); // in other cases could be parentElement or nextElementSibling
+                                       var radius = Number(circ.attr("r"));
+                                       var offset = Number(d3text.attr("dy"));
+                                       var textWidth = d3.select(this).text; // TODO: this could be bounding box instead
+                                       var availWidth = chordWidth(Math.abs(offset), radius)* 0.85; // TODO: could adjust based on ratio of dy to radius
+                                       //availWidth = availWidth * 0.85; // fixed 15% 'padding' for now, could be more dynamic/precise based on above TODOs
+                                       console.log(textWidth);
+                                       d3text.attr("data-scale", availWidth / textWidth); // sets the data attribute, which is read in the next step
+                                      }
+
+                                      function chordWidth(dFromCenter, radius) {
+                                       if (dFromCenter > radius) return Number.NaN;
+                                       if (dFromCenter === radius) return 0;
+                                       if (dFromCenter === 0) return radius * 2;
+
+                                       // a^2 + b^2 = c^2
+                                       var a = dFromCenter;
+                                       var c = radius;
+                                       var b = Math.sqrt(Math.pow(c, 2) - Math.pow(a, 2)); // 1/2 of chord length
+
+                                       return b * 2;
+                                      }
+
+                              root = d3.hierarchy(root)
+                                  .sum(function(d) { return d.size; })
+                                  .sort(function(a, b) { return b.value - a.value; });
+
+                              var focus = root,
+                                  nodes = pack(root).descendants(),
+                                  view;
+                              var circle = g.selectAll("circle")
+                                .data(nodes)
+                                .enter().append("circle")
+                                  .attr("class", function(d) { return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root"; })
+                                  .style("fill", function(d) { return d.children ? color(d.depth) : null; })
+                                  .on("click", function(d) { if (focus !== d) zoom(d), d3.event.stopPropagation(); })
+                            	  .on("mouseover", function(d){return tooltip.text(d.data.name).style("visibility", "visible").style("position","relative");})
+                            	  .on("mousemove", function(){return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");})
+                            	  .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
+                                var text = g.selectAll("text")
+                                  .data(nodes)
+                                  .enter().append("text")
+                                    .attr("class", "label")
+                                    .style("fill-opacity", function(d) { return d.parent === root ? 1 : 0; })
+                                    .style("visibility", function(d) { return d.parent === root ? "inline" : "none"; })
+                                    .style("font-size", function(d) {
+                                        var len = d.data.name.substring(0, d.r / 3).length;
+                                        var size = d.r/3;
+                                        size *= 10 / len;
+                                        size += 1;
+                                        return Math.round(size)+'px';
+                                    })
+                                    .text(function(d) {
+                                        var text = d.data.name.substring(0, d.r / 3);
+                                        return text;
+                                    })
+                                    .attr("dy", ".35em");;
+
+
+                              var node = g.selectAll("circle,text");
+                              svg.style("background", color(-1))
+                                  .on("click", function() { zoom(root); });
+                              zoomTo([root.x, root.y, root.r * 2 + margin]);
+                              function zoom(d) {
+                                var focus0 = focus; focus = d;
+                                var transition = d3.transition()
+                                    .duration(d3.event.altKey ? 7500 : 750)
+                                    .tween("zoom", function(d) {
+                                      var i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2 + margin]);
+                                      return function(t) { zoomTo(i(t)); };
+                                    });
+                                transition.selectAll("text")
+                                  .filter(function(d) { return d.parent === focus || this.style.display === "inline"; })
+                                    .style("fill-opacity", function(d) { return d.parent === focus ? 1 : 0; })
+                                    .on("start", function(d) { if (d.parent === focus) this.style.display = "inline"; })
+                                    .on("end", function(d) { if (d.parent !== focus) this.style.display = "none"; });
+                              }
+                              function zoomTo(v) {
+                                var k = diameter / v[2]; view = v;
+                                node.attr("transform", function(d) { return "translate(" + (d.x - v[0]) * k + "," + (d.y - v[1]) * k + ")"; });
+                                circle.attr("r", function(d) { return d.r * k; });
+                              }
+
+                              function hovered(hover) {
+                              return function(d) {
+                            	d3.selectAll(d.ancestors().map(function(d) {}));
+                              };
+                            }
+                          }
+                    </script>
             </div>
       </div>
 
-      <!-- jQuery CDN - Slim version (=without AJAX) -->
-      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-      <!-- Popper.JS -->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
-      <!-- Bootstrap JS -->
-      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 
       <script type="text/javascript">
           $(document).ready(function () {
@@ -107,6 +295,7 @@
               });
           });
       </script>
+      <script src="js/scripts.js"></script>
   </body>
 
 </html>

@@ -8,7 +8,6 @@ var http = require('http')
   , mongo = require('mongodb')
   , formidable = require('formidable');
 
-
 var server = http.createServer (function (req, res) {
   var uri = url.parse(req.url)
   //console.log(req.url);
@@ -28,6 +27,9 @@ var server = http.createServer (function (req, res) {
           break;
         case '/js/scripts.js':
           sendFile(res, 'public/js/scripts.js', 'text/javascript');
+          break;
+        case '/flare.json':
+          sendFile(res, 'public/flare.json', 'text/html');
           break;
         case '/503.html':
           send503(res,'public/503.html');
@@ -82,7 +84,6 @@ dbo  = db.db("Pokebase");
    dbo.createCollection("Teams", function(err, res) {
      if (err) throw err;
      console.log("Collection Teams created!");
-
    });
 
 //  db.close();
@@ -100,6 +101,8 @@ function sendFile(res, filename, contentType) {
     res.end(content, 'utf-8')
   })
 }
+
+
 
 function send404(res, filename, contentType) {
   contentType = contentType || 'text/html';
