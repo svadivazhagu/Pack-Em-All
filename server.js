@@ -1,5 +1,4 @@
-//Server.js by Daniel McDonough 9/12
-
+//Server.js by Surya Vadivashagu 9/30
 var http = require('http')
   , fs   = require('fs')
   , url  = require('url')
