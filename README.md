@@ -15,6 +15,8 @@ Do the following to complete this assignment:
 ---
 # Pack 'Em All: Circle Packing for Interactive Career Exploration
 ## By: dmcdonough & svadivazhagu | DATA | Circle Packing | Team PackEm
+[Check it out here!](https://a4-packem.herokuapp.com/)
+
 The cicle packing problem is an optimization problem centered around figuring out how to most optimally "pack" unit circles into a larger circle without having circles overlap. Using this technique is a fantastic way to visualize a deeply nested data structure/tree as being able to see how the top level circle can be broken down into the deepest subcircle makes understanding the tree structure far easier. 
 We applied our knowledge of the circle packing problem and leveraged our skills in D3.js to create an interactive data visualization about US employment data in 2014.
 
