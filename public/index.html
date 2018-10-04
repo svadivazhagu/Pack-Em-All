@@ -1,6 +1,6 @@
 <html lang="en">
   <head>
-    <title>Career Search</title>
+    <title>Pack em All</title>
     <meta charset="UTF-8">
      <meta name="description" content="Career Search WebApp for HighSchool Students">
      <meta name="author" content="Daniel McDonough">
@@ -27,35 +27,36 @@
               <div class="container">
               <!--Side bar Navigation Tabs-->
               <ul class="nav nav-tabs" role="tablist">
-                <li class="nav-item">
+                <!--<li class="nav-item">
                   <a class="nav-link active" data-toggle="tab" href="#search">Search</a>
-                </li>
+                </li>-->
                 <li class="nav-item">
-                  <a class="nav-link" data-toggle="tab" href="#upload">Upload</a>
+                  <a class="nav-link active" data-toggle="tab" href="#upload">Upload</a>
                 </li>
               </ul>
               <div class="tab-content">
+                <!--
                 <div id="search" class=" tab-pane active"><br>
                   <form class="text-center p-3" >
                     <p class="h4 mb-4">Search Jobs</p>
                       <input type="text" id="search_catagory" class="form-control mb-4" placeholder="Search Jobs...">
 
-                    <!-- Subject -->
+                     Subject
 
-                    <!-- Send button -->
+                    <Send button
                     <button method="post" class="btn btn-primary btn-block" type="button" onclick="search()">Go!</button>
 
                     <br/><br/>
 
                   </form>
-                  </div>
-                <div id="upload" class="container tab-pane fade"><br>
+                </div>-->
+                <div id="upload" class="container tab-pane active"><br>
                   <form action="filetoupload" method="post" enctype="multipart/form-data" class="text-center p-3">
                         <p class="h4 mb-4">Add Jobs</p>
                     <!-- Name -->
                     <input type="text" id="input_jobname" class="form-control mb-4" placeholder="Job Name...">
                     <input type="text" id="input_parent" class="form-control mb-4" placeholder="Classification...">
-                    <input type="text" id="input_data" class="form-control mb-4" placeholder="Data...">
+                    <!--<input type="text" id="input_data" class="form-control mb-4" placeholder="Data...">-->
 
                     <!-- Subject -->
                         <button type="button" class="btn btn-primary btn-block"  onclick="upload()">Upload</button>
@@ -72,21 +73,21 @@
                   <form action="update" method="post" enctype="multipart/form-data" class="text-center p-3">
 
 
-                            <p class="h4 mb-4">Job Data</p>
+                            <p class="h4 mb-4">Modify Job Data</p>
 
                         <!-- Name -->
                         <input type="text" id="input_jobname_u" class="form-control mb-4" placeholder="Job Name...">
 
-                        <input type="text" id="input_parent_u" class="form-control mb-4" placeholder="Classification...">
+                        <input type="text" id="input_parent_u" class="form-control mb-4" placeholder="Edit Classification...">
 
-                        <input type="text" id="input_data_u" class="form-control mb-4" placeholder="Data...">
+                        <input type="text" id="input_data_u" class="form-control mb-4" placeholder="New Name...">
                         <!-- Subject -->
 
                           <p id="errormsg-upd" class="hidden errormsg">Please make sure your link is correct and no field is empty</p>
 
 
                           <button type="button" class="btn btn-secondary btn-block"  onclick="update()">Update</button>
-                          <button type="button" class="btn btn-danger btn-block"  onclick="delete()">Delete</button>
+                          <button type="button" class="btn btn-danger btn-block"  onclick="deleteitem()">Delete</button>
 
                       </form>
 
@@ -106,7 +107,7 @@
                       </button>
                   </div>
 
-                  <svg width="960" height="960"></svg>
+                  <svg id="canvas" width="960" height="960"></svg>
                   <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
                   <script src="js/scripts.js"></script>
             </div>

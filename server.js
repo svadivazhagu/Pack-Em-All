@@ -27,9 +27,6 @@ var server = http.createServer (function (req, res) {
         case '/js/scripts.js':
           sendFile(res, 'public/js/scripts.js', 'text/javascript');
           break;
-        case '/flare.json':
-          sendFile(res, 'public/flare.json', 'text/html');
-          break;
         case '/503.html':
           send503(res,'public/503.html');
           break;
@@ -40,21 +37,13 @@ var server = http.createServer (function (req, res) {
     }
     else if(req.method === "POST") {
       switch(uri.pathname){
-        case '/search':
-          query(req, res);
-          break;
-        case '/upload':
-          upload(req,res)
+        case '/flare':
+          getdata(req,res);
           break;
         case '/update':
           update(req,res)
           break;
-        case '/delete':
-          del(req,res)
-          break;
-        case '/random':
-          rand(req,res)
-          break;
+
         default:
           send404(res, 'public/404.html');
           break;
@@ -68,7 +57,6 @@ var server = http.createServer (function (req, res) {
 server.listen(process.env.PORT || port);
 console.log('listening on 8080')
 
-
 var MongoClient = require('mongodb').MongoClient;
 //var Server = require('mongodb').Server;
 var MDBuri = "mongodb+srv://svadivazhagu:goatshead@occupation-rqsol.mongodb.net/test?retryWrites=true";
@@ -79,19 +67,34 @@ MongoClient.connect(MDBuri,{ useNewUrlParser: true }, function(err, db) {
   if (err) throw err;
  console.log("Database Connected!");
 
-dbo  = db.db("occupationDb");
+  dbo  = db.db("occupationDb");
    dbo.createCollection("occupation", function(err, res) {
      if (err) throw err;
      console.log("Collection Occupation created!");
    });
 
-//  db.close();
-  //console.log("Database closed!");
+
 });
 
 
 // subroutines
 // NOTE: this is an ideal place to add your data functionality
+
+function getdata(req, res) {
+  //contentType = contentType || 'text/html';
+
+  dbo.collection("occupation").find("children").toArray(function(err, result){
+      if (err) throw err;
+      console.log(result);
+      var obj = {};
+      obj.result = result;
+      res.writeHead(200, {'Content-Type': 'text/html'});
+      res.write(JSON.stringify(obj));
+    //  var query = result.length; //get the length of the results
+      res.end();
+
+    });
+}
 
 function sendFile(res, filename, contentType) {
   contentType = contentType || 'text/html';
@@ -100,8 +103,6 @@ function sendFile(res, filename, contentType) {
     res.end(content, 'utf-8')
   })
 }
-
-
 
 function send404(res, filename, contentType) {
   contentType = contentType || 'text/html';
@@ -150,11 +151,11 @@ function upload(req,res){
         //console.log(parse);
 
         //get the link
-        link = { link: parse.link };
-        console.log("Uploading data: "+parse.link)
+        job = { job: parse.job };
+        console.log("Uploading data: "+ parse.job)
 
         //check if link already exists in the DB
-        dbo.collection("occupation").find(link).toArray(function(err, result) {
+        dbo.collection("occupation").find("children").toArray(function(err, result) {
            if (err) throw err;
            console.log(result);
            inDatabase = result.length; //get the length of the results
@@ -240,15 +241,17 @@ function update(req,res){
     var parse = '';
     req.on('data', function(d) {
       parse = JSON.parse(d);
-      link = { link: parse.link };
-      console.log(parse.link)
-    })
-    req.on('end', function() {
-       res.writeHead(200, {'Content-Type': 'text/html'});
-       dbo.collection("occupation").updateOne(dbo.collection("occupation").find(link),parse);
-       res.write(JSON.stringify(parse));
-       console.log("Item Updated");
-       res.end();
+      name = { name: parse.name };
+      console.log(parse)
+      res.writeHead(200, {'Content-Type': 'text/html'});
+      dbo.collection("occupation").deleteOne(parse.id);
+      dbo.collection("occupation").insertOne(parse, function(err, res) {
+       if (err) throw err;
+       console.log("Occupation Uploaded");
+      });
+      res.write(JSON.stringify(parse));
+      console.log("Item Updated");
+      res.end();
     })
 }
 

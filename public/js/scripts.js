@@ -4,19 +4,19 @@ $( document ).ready(function() {
     console.log( "Page Loaded!" );
     //Load the Circle packing Graph
     var xml = new XMLHttpRequest();
-    xml.open("GET", "/flare.json");
+    xml.open("POST", "/flare");
     xml.onreadystatechange = handle_init_Graph;
     xml.send();
 });
 
 function askforgraph(){
   var xml = new XMLHttpRequest();
-  xml.open("GET", "/flare.json");
+  xml.open("POST", "/flare");
   xml.onreadystatechange = handle_init_Graph;
   xml.send();
 }
 
-
+var dataset;
 //handle the init fetched data to printthe graph
   function handle_init_Graph() {
     switch(this.readyState){
@@ -33,8 +33,9 @@ function askforgraph(){
       if (this.status == 200) {
         var myArr = JSON.parse(this.responseText);
           //console.log("From the front end:\n");
-          //console.log(myArr);
-          load_init_graph(myArr);
+          console.log(myArr.result[0]);
+          dataset = myArr.result[0];
+          load_init_graph(dataset);
           //return myArr;
         }
         else if(this.status == 404){
@@ -53,7 +54,10 @@ function askforgraph(){
 
 //This function takes the root node of the data set and makes a circle packing gaph
 function load_init_graph(root){
-
+  var canvas = document.getElementById("canvas");
+  while (canvas.firstChild) {
+    canvas.removeChild(canvas.firstChild);
+  }
   var color = d3.scaleLinear()
         .domain([-1, 5])
         .range(["#8BBCFC", "hsl(228,30%,40%)"])
@@ -120,10 +124,7 @@ function load_init_graph(root){
         .enter().append("circle")
           .attr("class", function(d) { return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root"; })
           .style("fill", function(d) { return d.children ? color(d.depth) : null; })
-          .on("click", function(d) { if (focus !== d) zoom(d), d3.event.stopPropagation(); })
-    	  .on("mouseover", function(d){return tooltip.text(d.data.name).style("visibility", "visible").style("position","relative");})
-    	  .on("mousemove", function(){return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");})
-    	  .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
+          .on("click", function(d) { if (focus !== d) zoom(d), d3.event.stopPropagation(); });
         var text = g.selectAll("text")
           .data(nodes)
           .enter().append("text")
@@ -138,7 +139,7 @@ function load_init_graph(root){
                 return Math.round(size)+'px';
             })
             .text(function(d) {
-                var text = d.data.name.substring(0, d.r / 3);
+                var text = d.data.name;
                 return text;
             })
             .attr("dy", ".35em");;
@@ -183,27 +184,27 @@ function upload(){
   var data = getUploadQuery(); //get inputdata
   if(data == null){
     //update UI to BAD URL
-    var errormsg = document.getElementById("errormsg");
-    errormsg.classList.remove("hidden");
+  alert("Data not Sufficient...");
   } else{
+    findNode_upload(data.parent, dataset,data.job);
     var xml = new XMLHttpRequest();
-    xml.open("POST", "/upload");
+    xml.open("POST", "/update");
     xml.onreadystatechange = handle_upload_res;
-    xml.send(JSON.stringify(data)); //send the data to the server
+    xml.send(JSON.stringify(dataset)); //send the data to the server
   }
 }
 
 
 //Get upload data
   function getUploadQuery(){
-    var input_data = document.getElementById("input_data"); //takes the data
+    //var input_data = document.getElementById("input_data"); //takes the data
     var input_name = document.getElementById("input_jobname"); //takes the job title
     var input_parent = document.getElementById("input_parent"); //takes the parent class
-    if(input_data.value == '' || input_name.value == '' || input_parent.value == '' ){
+    if( input_name.value == '' || input_parent.value == '' ){
       console.log("YOU DONE MESSED UP")
       return null;
     }
-    var data = {'job': input_name.value, 'data': input_data.value,  'parent': input_parent.value};
+    var data = {'job': input_name.value,  'parent': input_parent.value};
     //  json.push(data);
     return data;
   }
@@ -217,10 +218,11 @@ function update(){
     var errormsg = document.getElementById("errormsg-upd");
     errormsg.classList.remove("hidden");
   } else{
+    findNode_update(data, dataset);
     var xml = new XMLHttpRequest();
     xml.open("POST", "/update");
     xml.onreadystatechange = handle_update_res;
-    xml.send(JSON.stringify(data));
+    xml.send(JSON.stringify(dataset));
   }
 }
 
@@ -229,11 +231,20 @@ function update(){
     var input_data = document.getElementById("input_data_u"); //takes the data
     var input_name = document.getElementById("input_jobname_u"); //takes the job title
     var input_parent = document.getElementById("input_parent_u"); //takes the parent class
-    if(input_data.value == '' || input_name.value == '' || input_parent.value == '' ){
+    if( input_name.value == '' || (input_parent.value == '' && input_data.value == '')){
       console.log("YOU DONE MESSED UP")
       return null;
     }
-    var data = {'job': input_name.value, 'data': input_data.value,  'parent': input_parent.value};
+    var data;
+    if(input_data.value == null){
+      data = {'job': input_name.value,  'parent': input_parent.value};
+    }
+    else if (input_parent.value == null){
+      data = {'job': input_name.value, 'data': input_data.value  };
+    }
+    else{
+       data = {'job': input_name.value, 'data': input_data.value,  'parent': input_parent.value};
+    }
     return data;
   }
 
@@ -260,6 +271,7 @@ function handle_upload_res() {
       //CHECK IF response was an update response!
       if(myArr.responselen != null){
           console.log("That item was in the array already");
+          askforgraph()
       }else{
           //UPDATE UI
           askforgraph()
@@ -299,10 +311,10 @@ function handle_upload_res() {
         console.log(this.responseText);
         //CHECK IF response was an update response!
         if(myArr.responselen != null){
-            load_init_graph(myArr)
+            //load_init_graph(myArr)
         }else{
           //UPDATE UI
-
+            askforgraph()
 
           }
         }
@@ -320,88 +332,214 @@ function handle_upload_res() {
 
     }
 
+//
+// //Onclick Search Function
+//   function search(){
+//     var data = getSearchQuery();
+//     var xml = new XMLHttpRequest();
+//     xml.onreadystatechange = handle_search_res;
+//     xml.open("POST", "/search");
+//     xml.send(JSON.stringify(data));
+//   }
+//
+// //Get the search query from form
+//   function getSearchQuery(){
+//     var search_name = document.getElementById("search_catagory");
+//     var line = {'job': search_name.value};
+//     return line;
+//   }
+//
+// //handle search response
+//   function handle_search_res() {
+//     switch(this.readyState){
+//       case 1:
+//           console.log("Opened Query MSG");
+//           break;
+//       case 2:
+//           console.log("Reading Query HEADER");
+//           break;
+//       case 3:
+//           console.log("Loading Query Data");
+//           break;
+//       case 4:
+//       if (this.status == 200) {
+//         var myArr = JSON.parse(this.responseText);
+//           //console.log("From the front end:\n");
+//           console.log(myArr.result.length);
+//            //UPDATE TABLE w/ RESPONSES
+//
+//
+//
+//         }
+//         else if(this.status == 404){
+//           console.log("Error 404");
+//         }
+//         else{
+//           console.log('Error 503');
+//         }
+//         break;
+//       default:
+//         console.log("Something Went wrong...");
+//         break;
+//       }
+//     }
+function findNode_upload(name,currentNode,child) {
+    var i,
+        currentChild,
+        result;
 
-//Onclick Search Function
-  function search(){
-    var data = getSearchQuery();
-    var xml = new XMLHttpRequest();
-    xml.onreadystatechange = handle_res_get;
-    xml.open("POST", "/search");
-    xml.send(JSON.stringify(data));
-  }
+    if (name == currentNode.name) {
+      var obj = {"name": newname,"children":[]};
+        if(typeof currentNode.children ==undefined){
+          currentNode.children = [obj];
+        }
+        else{
 
-//Get the search query from form
-  function getSearchQuery(){
-    //var json = [];
-    var search_name = document.getElementById("search_catagory");
-    var line = {'job': search_name.value};
-    return line;
-  }
+          currentNode.children.append = obj;
+        }
+        return currentNode;
+    } else {
 
-//handle search response
-  function handle_res_get() {
-    switch(this.readyState){
-      case 1:
-          console.log("Opened Query MSG");
-          break;
-      case 2:
-          console.log("Reading Query HEADER");
-          break;
-      case 3:
-          console.log("Loading Query Data");
-          break;
-      case 4:
-      if (this.status == 200) {
-        var myArr = JSON.parse(this.responseText);
-          //console.log("From the front end:\n");
-          console.log(myArr.result.length);
-           //UPDATE TABLE w/ RESPONSES
+        // Use a for loop instead of forEach to avoid nested functions
+        // Otherwise "return" will not work properly
+        for (i = 0; i < currentNode.children.length; i += 1) {
+            currentChild = currentNode.children[i];
 
-          var parent = document.getElementById("tablebody");
-          parent.innerHTML = '';
-            //check if no responses
-          if(myArr.result.length == '0'){
-            var row = document.createElement("tr");
-            row.innerHTML=('<td colspan="6">'+ 'No Teams Available, Sorry...' +'</td>');
-            parent.appendChild(row);
-          }else{
-            var results = myArr.result;
-            for(var i =0;i<myArr.result.length;i++){
-              var row = document.createElement("tr");
-              row.id = results[i].link;
-              row.innerHTML=('<td>'+ results[i].teamname +'</td><td>'+ results[i].author +'</td><td>'+ results[i].format +'</td><td>'+ results[i].gen +'</td><td><a href="'+ results[i].link +'"target="_blank">'+results[i].link+'</a></td><td id="del" onclick="deleteitem(\'' +  results[i].link + '\')" class="delete"><i class="fa fa-trash-o"></i></td>');
-              parent.appendChild(row);
+            // Search in the current child
+            result = findNode(name, currentChild);
+
+            // Return the result if the node has been found
+            if (result !== false) {
+                return result;
             }
-          }
+        }
 
+        // The node has not been found and we have no more options
+        return false;
+    }
+}
+    function findNode(name, currentNode) {
+        var i,
+            currentChild,
+            result;
 
+        if (name == currentNode.name) {
+            return currentNode;
+        } else {
+
+            // Use a for loop instead of forEach to avoid nested functions
+            // Otherwise "return" will not work properly
+
+            for (i = 0; i < currentNode.children.length; i += 1) {
+                currentChild = currentNode.children[i];
+
+                // Search in the current child
+                result = findNode(name, currentChild);
+
+                // Return the result if the node has been found
+                if (result !== false) {
+                    return result;
+                }
+            }
+          
+
+            // The node has not been found and we have no more options
+            return false;
         }
-        else if(this.status == 404){
-          console.log("Error 404");
+    }
+
+    function findNode_update(name, currentNode,newname) {
+        var i,
+            currentChild,
+            result;
+
+        if (name == currentNode.name) {
+            currentNode.Name =newname;
+            return currentNode;
+        } else {
+
+            // Use a for loop instead of forEach to avoid nested functions
+            // Otherwise "return" will not work properly
+            for (i = 0; i < currentNode.children.length; i += 1) {
+                currentChild = currentNode.children[i];
+
+                // Search in the current child
+                result = findNode(name, currentChild);
+
+                // Return the result if the node has been found
+                if (result !== false) {
+                    return result;
+                }
+            }
+
+            // The node has not been found and we have no more options
+            return false;
         }
-        else{
-          console.log('Error 503');
+    }
+
+    function findNode_DEL(name, currentNode) {
+        var i,
+            currentChild,
+            result;
+
+        if (name == currentNode.name) {
+            delete currentNode.name;
+            delete currentNode.children;
+            return currentNode;
+        } else {
+
+            // Use a for loop instead of forEach to avoid nested functions
+            // Otherwise "return" will not work properly
+            for (i = 0; i < currentNode.children.length; i += 1) {
+                currentChild = currentNode.children[i];
+
+                // Search in the current child
+                result = findNode(name, currentChild);
+
+                // Return the result if the node has been found
+                if (result !== false) {
+                    return result;
+                }
+            }
+
+            // The node has not been found and we have no more options
+            return false;
         }
-        break;
-      default:
-        console.log("Something Went wrong...");
-        break;
-      }
     }
 
 
 //onClick Response for Delete Button
-function deleteitem(id){
-  //console.log("HELLO THERE");
-  console.log(id);
-  $('#deletemodal').modal('toggle');
-  var modalbod = document.getElementById("deletemodalbody");
-  modalbod.innerHTML = (''+id); //load delete warning
-  var row = document.getElementById(id);
-  console.log(id);
-  //row.parentElement.removeChild(row);
+function deleteitem(){
+  var data = getUpdateQuery();
+  if(data == false){
+    //update UI to input
+    alert("No Data Found by that name.");
+  } else{
+    findNode_DEL(data, dataset)
 
+
+
+    var xml = new XMLHttpRequest();
+    xml.open("POST", "/update");
+    xml.onreadystatechange = handle_update_res;
+   xml.send(JSON.stringify(dataset));
+  }
 }
+
+
+
+//Get delete data
+  function getDelQuery(){
+
+    var input_name = document.getElementById("input_jobname_u"); //takes the job title
+    if( input_name.value == ''){
+      console.log("YOU DONE MESSED UP")
+      return false;
+    }
+    var data = findNode(input_name.value, dataset);
+    return data;
+  }
+
 //on delete confirm, delete row from ui and call server
 function deleteitemconfirm(){
   var modalbod = document.getElementById("deletemodalbody");
@@ -413,29 +551,29 @@ function deleteitemconfirm(){
   row.parentElement.removeChild(row);
   var xml = new XMLHttpRequest();
   xml.open("POST", "/delete");
-  //xml.onreadystatechange = handle_res_post;
-  xml.send(JSON.stringify(data));
+  xml.onreadystatechange = handle_res_post;
+  xml.send(JSON.stringify(dataset));
 }
 
-//Get info to delete the correct row
-function getdelrow(row){
-  var children = row.childNodes;
-  var name= children[0].innerHTML;
-  var auth= children[1].innerHTML;
-  var format= children[2].innerHTML;
-  var gen= children[3].innerHTML;
-  var link= row.id;
-  var data = {'teamname': name, 'author': auth,  'format': format, 'gen': gen, 'link': link};
-  console.log(data);
-  return data;
-}
-
-//On start and on click Randomized Search
-function randomSearch(){
-  console.log("Random Search...");
-  var data = {};
-  var xml = new XMLHttpRequest();
-  xml.open("POST", "/random");
-  xml.onreadystatechange = handle_res_get;
-  xml.send(JSON.stringify(data));
-}
+// //Get info to delete the correct row
+// function getdelrow(row){
+//   var children = row.childNodes;
+//   var name= children[0].innerHTML;
+//   var auth= children[1].innerHTML;
+//   var format= children[2].innerHTML;
+//   var gen= children[3].innerHTML;
+//   var link= row.id;
+//   var data = {'teamname': name, 'author': auth,  'format': format, 'gen': gen, 'link': link};
+//   console.log(data);
+//   return data;
+// }
+//
+// //On start and on click Randomized Search
+// function randomSearch(){
+//   console.log("Random Search...");
+//   var data = {};
+//   var xml = new XMLHttpRequest();
+//   xml.open("POST", "/random");
+//   xml.onreadystatechange = handle_res_get;
+//   xml.send(JSON.stringify(data));
+// }
