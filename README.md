@@ -1,18 +1,4 @@
-Assignment 4 - Real Web Apps: Designing for an Area of Life  
-===
-Deliverables
----
 
-Do the following to complete this assignment:
-
-1. Fork the starting project repo.
-2. Implement your project with the above requirements.
-3. Test your project to make sure that when someone goes to your main page, it displays correctly.
-4. Deploy your project to Heroku or equivalent hosting platform.
-5. **Ensure that your project has the proper naming scheme `a4-yourGitHubName` or `a4-yourTeamName` so we can find it.**
-6. Modify the Readme to the specifications below.
-7. Create and submit a Pull Request to the original repo.
----
 # Pack 'Em All: Circle Packing for Interactive Career Exploration
 ## By: dmcdonough & svadivazhagu | DATA | Circle Packing | Team PackEm
 [Check it out here!](https://a4-packem.herokuapp.com/)
