@@ -8,6 +8,7 @@
      <!-- Bootstrap CSS CDN -->
      <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+
      <link rel="stylesheet" href="css/style.css">
      <!--Jquery & Bootsrap JS -->
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -53,7 +54,6 @@
                         <p class="h4 mb-4">Add Jobs</p>
                     <!-- Name -->
                     <input type="text" id="input_jobname" class="form-control mb-4" placeholder="Job Name...">
-
                     <input type="text" id="input_parent" class="form-control mb-4" placeholder="Classification...">
                     <input type="text" id="input_data" class="form-control mb-4" placeholder="Data...">
 
@@ -73,16 +73,16 @@
 
 
                             <p class="h4 mb-4">Job Data</p>
+
                         <!-- Name -->
                         <input type="text" id="input_jobname_u" class="form-control mb-4" placeholder="Job Name...">
 
                         <input type="text" id="input_parent_u" class="form-control mb-4" placeholder="Classification...">
 
                         <input type="text" id="input_data_u" class="form-control mb-4" placeholder="Data...">
-
                         <!-- Subject -->
 
-                            <p id="errormsg" class="hidden errormsg">Please make sure your link is correct and no field is empty</p>
+                          <p id="errormsg-upd" class="hidden errormsg">Please make sure your link is correct and no field is empty</p>
 
 
                           <button type="button" class="btn btn-secondary btn-block"  onclick="update()">Update</button>
@@ -90,7 +90,7 @@
 
                       </form>
 
-            
+
             </div>
           </nav>
 

@@ -18,8 +18,8 @@ var server = http.createServer (function (req, res) {
         case '/index.html':
           sendFile(res, 'public/index.html');
           break;
-        case '/css/pokemon.png':
-          sendFile(res, 'public/css/pokemon.png','img/png');
+        case '/css/loading.gif':
+          sendFile(res, 'public/css/loading.gif','img/gif');
           break;
         case '/css/style.css':
           sendFile(res, 'public/css/style.css', 'text/css');
