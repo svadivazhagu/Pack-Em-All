@@ -2,6 +2,9 @@
   "name": "DomainofLife",
   "description": "Assignment 4-WebApp",
   "author": "Daniel McDonough",
+  "engines": {
+    "node": "8.9.4"
+  },
   "private": true,
   "scripts": {
     "start": "node server.js"
