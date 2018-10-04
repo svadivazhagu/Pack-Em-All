@@ -35,7 +35,7 @@ geological engineering was a career, and now you're on your way to studying the 
 - **Mobile optimization of d3 graph**: Had to calculate ratios using window sizes to optimize the viewing of the graph on all platforms, mobile included.
 
 ## Design/Evaluation Achievements
-- **Togglable sidebar 1:** We implemented a sidebar that can be toggled shown and hidden with one click. This sidebar houses most of the user interactivity functionality. 
+- **Togglable sidebar:** We implemented a sidebar that can be toggled shown and hidden with one click. This sidebar houses most of the user interactivity functionality. 
 
 - **Loading GIF for when the graph takes too long to render:** We understand that some devices will be incapable of instantly rendering the d3 visualization. In this case, we implemented a loading GIF that is played until the rendering is done. This eliminates the user interactivity bottleneck of when the graph is loading for them. 
 
